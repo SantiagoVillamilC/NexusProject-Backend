@@ -46,6 +46,16 @@ const UsuarioSchema = {
     type: DataTypes.ENUM('cliente', 'vendedor', 'admin'),
     field: 'tipo_usuario',
   },
+  contraseña: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    field: 'contraseña',
+  },
+  nickname: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    field: 'nickname',
+  },
 };
 
 module.exports = { Usuario, UsuarioSchema };

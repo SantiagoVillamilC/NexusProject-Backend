@@ -32,6 +32,43 @@ const getById = async (req, res) => {
   }
 };
 
+// Nueva función para obtener usuario por nickname
+const getByNickname = async (req, res) => {
+  try {
+    const { nickname } = req.params;
+    const response = await service.findByNickname(nickname);
+    if (!response) {
+      return res.status(404).send({ success: false, message: 'Usuario no encontrado' });
+    }
+    // Eliminar la contraseña antes de enviar la respuesta
+    const { password, ...userData } = response.toJSON();
+    res.json(userData);
+  } catch (error) {
+    res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+const login = async (req, res) => { 
+  try {
+    const { nickname, contraseña } = req.body;
+
+    const usuario = await service.findByNickname(nickname);
+    if (!usuario) {
+      return res.status(404).send({ success: false, message: 'Usuario no encontrado' });
+    }
+
+    // Verificar la contraseña directamente
+    if (usuario.contraseña !== contraseña) {
+      return res.status(401).send({ success: false, message: 'Contraseña incorrecta' });
+    }
+
+    res.json({ success: true, message: 'Login exitoso', usuario: { nickname: usuario.nickname } });
+  } catch (error) {
+    res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+
 const update = async (req, res) => {
   try {
     const { id } = req.params;
@@ -54,5 +91,5 @@ const _delete = async (req, res) => {
 };
 
 module.exports = {
-  create, get, getById, update, _delete
+  create, get, getById, update, _delete, login, getByNickname // Asegúrate de exportar la nueva función
 };

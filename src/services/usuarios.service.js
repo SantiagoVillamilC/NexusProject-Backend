@@ -1,39 +1,46 @@
-const { models } = require('../libs/sequelize');
+// services/usuarios.service.js
+const { Usuario } = require('../db/models/usuarios.model');
 
 class UsuariosService {
-  constructor() {}
+  async create(data) {
+    const usuario = await Usuario.create(data);
+    return usuario;
+  }
 
   async find() {
-    const res = await models.Usuario.findAll();
-    return res;
+    const usuarios = await Usuario.findAll();
+    return usuarios;
   }
 
   async findOne(id) {
-    const res = await models.Usuario.findByPk(id);
-    return res;
+    const usuario = await Usuario.findByPk(id);
+    return usuario;
   }
 
-  async create(data) {
-    const res = await models.Usuario.create(data);
-    return res;
+  // Función para encontrar usuario por nickname (nueva)
+  async findByNickname(nickname) {
+    const usuario = await Usuario.findOne({ where: { nickname } });
+    return usuario;
   }
 
+  // Función para actualizar usuario (ya existente)
   async update(id, data) {
     const usuario = await this.findOne(id);
-    if (!usuario) {
-      throw new Error('Usuario no encontrado');
+    if (usuario) {
+      await usuario.update(data);
+      return usuario;
     }
-    const res = await usuario.update(data);
-    return res;
+    return null;
   }
 
+  // Función para eliminar usuario (ya existente)
   async delete(id) {
     const usuario = await this.findOne(id);
-    if (!usuario) {
-      throw new Error('Usuario no encontrado');
+    if (usuario) {
+      await usuario.destroy();
+      return { message: 'Usuario eliminado' };
     }
-    await usuario.destroy();
-    return { deleted: true };
+    return { message: 'Usuario no encontrado' };
   }
 }
 

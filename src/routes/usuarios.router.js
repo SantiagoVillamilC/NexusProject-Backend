@@ -1,12 +1,14 @@
+// routes/usuarios.router.js
 const express = require('express');
 const router = express.Router();
-const usuariosController = require('../controllers/usuarios.controller');
+const { create, get, getById, update, _delete, login, getByNickname } = require('../controllers/usuarios.controller');
 
-router
-  .get('/', usuariosController.get)
-  .get('/:id', usuariosController.getById)
-  .post('/', usuariosController.create)
-  .put('/:id', usuariosController.update)
-  .delete('/:id', usuariosController._delete);
+router.post('/', create);
+router.get('/', get);
+router.get('/:id', getById);
+router.get('/nickname/:nickname', getByNickname);
+router.put('/:id', update);
+router.delete('/:id', _delete);
+router.post('/login', login);
 
 module.exports = router;
