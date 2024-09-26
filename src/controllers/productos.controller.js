@@ -4,12 +4,12 @@ const ProductosService = require('../services/productos.service');
 const service = new ProductosService();
 
 const createProducto = async (req, res) => {
-  const { body } = req;
+  const { body } = req;  
   try {
-    const newProducto = await service.create(body);
-    return res.status(201).json(newProducto);
+    const response = await service.create(req.body);
+    res.json({ success: true, data: response });
   } catch (error) {
-    return res.status(500).json({ message: 'Error al crear el producto' });
+    res.status(500).send({ success: false, message: error.message });
   }
 };
 
